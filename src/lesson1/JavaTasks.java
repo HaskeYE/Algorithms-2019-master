@@ -2,6 +2,10 @@ package lesson1;
 
 import kotlin.NotImplementedError;
 
+import java.util.ArrayList;
+import java.util.Map;
+import java.util.SortedMap;
+
 @SuppressWarnings("unused")
 public class JavaTasks {
     /**
@@ -34,9 +38,88 @@ public class JavaTasks {
      *
      * В случае обнаружения неверного формата файла бросить любое исключение.
      */
+
+    public class TimeAPM {
+        public TimeAPM(String str){
+            if (str.trim().length() < )
+        }
+    }
+
+
+    private static int partitionAPM(int[] elements, int min, int max) {
+        int x = elements[min + random.nextInt(max - min + 1)];
+        int left = min, right = max;
+        while (left <= right) {
+            while (elements[left] < x) {
+                left++;
+            }
+            while (elements[right] > x) {
+                right--;
+            }
+            if (left <= right) {
+                int temp = elements[left];
+                elements[left] = elements[right];
+                elements[right] = temp;
+                left++;
+                right--;
+            }
+        }
+        return right;
+    }
+
+    private static void quickSortAPM(int[] elements, int min, int max) {
+        if (min < max) {
+            int border = partition(elements, min, max);
+            quickSort(elements, min, border);
+            quickSort(elements, border + 1, max);
+        }
+    }
+
+    public static void quickSortAPM(int[] elements) {
+        quickSort(elements, 0, elements.length - 1);
+    }
+
     static public void sortTimes(String inputName, String outputName) {
+
         throw new NotImplementedError();
     }
+
+
+
+
+
+    public class TimeAPM2 /*implements Comparable<TimeAPM>*/ {
+        Integer first;
+        Integer second;
+        Integer third;
+        String partOfDay;
+        Map<String, ArrayList<String>> set = new SortedMap();
+
+        public TimeAPM2(String str) {
+            this.first = 0;
+            this.second = 65;
+            this.third = 546;
+            this.partOfDay = str.substring(9, 11);
+            if ((first <= 12) && (second <= 60) && (third <= 60))
+                throw new IllegalArgumentException();
+        }
+    }
+
+        //Smaller than new => 1
+        //Bigger than new => 0
+        public void compareTo(TimeAPM time) {
+            if (this.partOfDay[0].toInt() < time.partOfDay[0].toInt()) return 1;
+            if (this.partOfDay[0].toInt() > time.partOfDay[0].toInt()) return 0
+            else {
+                if (this.first < time.first) return 1;
+                if (this.first > time.first) return 0;
+                if (this.second < time.second) return 1;
+                if (this.second < time.second) return 1;
+                if (this.third < time.third) return 1;
+                if (this.third > time.third) return 1;
+            }
+            return 0
+        }
 
     /**
      * Сортировка адресов

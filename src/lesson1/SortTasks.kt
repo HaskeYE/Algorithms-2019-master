@@ -2,6 +2,11 @@
 
 package lesson1
 
+import javafx.collections.transformation.SortedList
+import java.io.File
+import java.lang.IllegalArgumentException
+import java.util.*
+
 /**
  * Сортировка времён
  *
@@ -32,8 +37,90 @@ package lesson1
  *
  * В случае обнаружения неверного формата файла бросить любое исключение.
  */
+
+class TimeAPM(str: String) :
+    Comparable<TimeAPM> {
+    internal var first: Int
+    internal var second: Int
+    internal var third: Int
+    internal var partOfDay: String
+
+    init {
+        if ((str.trim().length != 11)
+            || (str.equals(Regex("""[01][0-2]:[0-6][0-9]:[0-6][0-9] ((AM)|(PM))""")))
+        ) throw java.lang.IllegalArgumentException()
+        this.first = str.substring(0, 2).toInt()
+        this.second = str.substring(3, 5).toInt()
+        this.third = str.substring(6, 8).toInt()
+        this.partOfDay = str.substring(9, 11)
+    }
+
+    //Smaller than new => 1
+    //Bigger than new => 0
+    override fun compareTo(time: TimeAPM): Int {
+        if (this.partOfDay[0].toInt() < time.partOfDay[0].toInt()) return 1
+        if (this.partOfDay[0].toInt() > time.partOfDay[0].toInt()) return 0
+        else {
+            if (this.first < time.first) return 1
+            if (this.first > time.first) return 0
+            if (this.second < time.second) return 1
+            if (this.second < time.second) return 1
+            if (this.third < time.third) return 1
+            if (this.third > time.third) return 1
+        }
+        return 0
+    }
+
+    public fun writeBack(): String =
+        String.format("%02d:%02d:%02d %s", first, second, third, partOfDay)
+}
+
+
+private val random = java.util.Random(Calendar.getInstance().timeInMillis)
+
+public fun partitionAPM(elements: MutableList<TimeAPM>, min: Int, max: Int): Int {
+    val x = elements[min + random.nextInt(max - min + 1)]
+    var left = min
+    var right = max
+    while (left <= right) {
+        while (elements[left].compareTo(x) == 0) {
+            left++
+        }
+        while (elements[right].compareTo(x) == 1) {
+            right--
+        }
+        if (left <= right) {
+            val temp = elements[left]
+            elements[left] = elements[right]
+            elements[right] = temp
+            left++
+            right--
+        }
+    }
+    return right
+}
+
+private fun quickSortAPM(elements: MutableList<TimeAPM>, min: Int, max: Int) {
+    if (min < max) {
+        val border = partitionAPM(elements, min, max)
+        quickSortAPM(elements, min, border)
+        quickSortAPM(elements, border + 1, max)
+    }
+}
+
+
 fun sortTimes(inputName: String, outputName: String) {
-    TODO()
+    if (java.io.File(inputName).readText() == "")
+        java.io.File(outputName).writeText("") else {
+        val times = java.io.File(inputName).readLines().map { it.trim() }
+        val decTimes = times.map { TimeAPM(it) }
+        quickSortAPM(decTimes.toMutableList(), 0, times.size - 1)
+        val outputStream = File(outputName).bufferedWriter()
+        for (time in decTimes) {
+            outputStream.write(time.writeBack())
+            outputStream.newLine()
+        }
+    }
 }
 
 /**
@@ -63,7 +150,32 @@ fun sortTimes(inputName: String, outputName: String) {
  * В случае обнаружения неверного формата файла бросить любое исключение.
  */
 fun sortAddresses(inputName: String, outputName: String) {
-    TODO()
+    if (java.io.File(inputName).readText() == "")
+        java.io.File(outputName).writeText("") else {
+        val strings = java.io.File(inputName).readLines().map { it.trim() }
+        val splitted = strings[0].split(" - ")
+        val set = sortedSetOf(splitted[1])
+        val map = sortedMapOf(Pair(splitted[0], set))
+        for (line in strings) {
+            if (!line.equals(Regex("""[А-Я][а-я]+ [А-Я][а-я]+ - ([А-Я][а-я]+ )+[0-9]+""")))
+                throw IllegalArgumentException()
+            val spl = line.split(" - ")
+            val adress = spl[0]
+            val name = spl[1]
+            if (map.containsKey(adress)) map[adress]!!.add(name)
+            else map[adress] = sortedSetOf(name)
+        }
+        val outputStream = File(outputName).bufferedWriter()
+        for (entry in map.entries) {
+            outputStream.write(entry.key)
+            outputStream.write(" - ")
+            for (name in entry.value) {
+                outputStream.write(name)
+                outputStream.write(", ")
+            }
+            outputStream.newLine()
+        }
+    }
 }
 
 /**
@@ -97,7 +209,25 @@ fun sortAddresses(inputName: String, outputName: String) {
  * 121.3
  */
 fun sortTemperatures(inputName: String, outputName: String) {
-    TODO()
+    if (java.io.File(inputName).readText() == "")
+        java.io.File(outputName).writeText("") else {
+        val temps = java.io.File(inputName).readLines().map { it.trim() }
+        val nums = DoubleArray(temps.size)
+        for (i in 0 until temps.size) {
+            if (!temps[i].equals(Regex("""[-0-9][0-9]+\.[0-9]+""")))
+                throw IllegalArgumentException();
+            val parts = temps[i].split(".")
+            nums[i] = parts[0].toDouble() +
+                    parts[1].toDouble() / (Math.pow(10.0, parts[1].length.toDouble()))
+            if (nums[i] !in (-273.0..500.0)) throw IllegalArgumentException()
+        }
+        nums.sort()
+        val outputStream = File(outputName).bufferedWriter()
+        for (temp in nums) {
+            outputStream.write(temp.toString())
+            outputStream.newLine()
+        }
+    }
 }
 
 /**
