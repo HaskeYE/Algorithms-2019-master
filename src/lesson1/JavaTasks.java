@@ -2,9 +2,7 @@ package lesson1;
 
 import kotlin.NotImplementedError;
 
-import java.util.ArrayList;
-import java.util.Map;
-import java.util.SortedMap;
+
 
 @SuppressWarnings("unused")
 public class JavaTasks {
@@ -39,7 +37,7 @@ public class JavaTasks {
      * В случае обнаружения неверного формата файла бросить любое исключение.
      */
 
-    public class TimeAPM {
+    /*public class TimeAPM {
         public TimeAPM(String str){
             if (str.trim().length() < )
         }
@@ -82,13 +80,13 @@ public class JavaTasks {
     static public void sortTimes(String inputName, String outputName) {
 
         throw new NotImplementedError();
-    }
+    }*/
 
 
 
 
 
-    public class TimeAPM2 /*implements Comparable<TimeAPM>*/ {
+    /*public class TimeAPM2 *//*implements Comparable<TimeAPM>*//* {
         Integer first;
         Integer second;
         Integer third;
@@ -119,7 +117,7 @@ public class JavaTasks {
                 if (this.third > time.third) return 1;
             }
             return 0
-        }
+        }*/
 
     /**
      * Сортировка адресов
