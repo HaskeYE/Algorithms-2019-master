@@ -37,7 +37,7 @@ public class JavaTasks {
      * В случае обнаружения неверного формата файла бросить любое исключение.
      */
 
-    /*public class TimeAPM {
+    /*public class TimeAPM implements {
         public TimeAPM(String str){
             if (str.trim().length() < )
         }

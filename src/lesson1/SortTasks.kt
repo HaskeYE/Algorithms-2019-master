@@ -2,10 +2,11 @@
 
 package lesson1
 
-import javafx.collections.transformation.SortedList
+
 import java.io.File
 import java.lang.IllegalArgumentException
 import java.util.*
+import kotlin.collections.HashMap
 
 /**
  * Сортировка времён
@@ -120,6 +121,7 @@ fun sortTimes(inputName: String, outputName: String) {
             outputStream.write(time.writeBack())
             outputStream.newLine()
         }
+        outputStream.close()
     }
 }
 
@@ -175,6 +177,7 @@ fun sortAddresses(inputName: String, outputName: String) {
             }
             outputStream.newLine()
         }
+        outputStream.close()
     }
 }
 
@@ -215,7 +218,7 @@ fun sortTemperatures(inputName: String, outputName: String) {
         val nums = DoubleArray(temps.size)
         for (i in 0 until temps.size) {
             if (!temps[i].equals(Regex("""[-0-9][0-9]+\.[0-9]+""")))
-                throw IllegalArgumentException();
+                throw IllegalArgumentException()
             val parts = temps[i].split(".")
             nums[i] = parts[0].toDouble() +
                     parts[1].toDouble() / (Math.pow(10.0, parts[1].length.toDouble()))
@@ -227,6 +230,7 @@ fun sortTemperatures(inputName: String, outputName: String) {
             outputStream.write(temp.toString())
             outputStream.newLine()
         }
+        outputStream.close()
     }
 }
 
@@ -260,7 +264,30 @@ fun sortTemperatures(inputName: String, outputName: String) {
  * 2
  */
 fun sortSequence(inputName: String, outputName: String) {
-    TODO()
+    if (java.io.File(inputName).readText() == "")
+        java.io.File(outputName).writeText("") else {
+        val numerals = java.io.File(inputName).readLines().map { it.trim().toInt() }
+        val times = HashMap<Int, Int>()
+        var desired = Pair(0, 0)
+        for (numeral in numerals) {
+            if (times[numeral] == null)
+                times[numeral] = 1 else
+                times[numeral] = times[numeral]!! + 1
+            if (((times[numeral]!! >= desired.second) && (numeral < desired.first)) ||
+                (times[numeral]!! > desired.second)
+            ) desired = Pair(numeral, times[numeral]!!)
+        }
+        val desiredNum = desired.first
+        val outputStream = File(outputName).bufferedWriter()
+        for (numeral in numerals)
+            if (numeral != desiredNum) {
+                outputStream.write(numeral)
+                outputStream.newLine()
+            }
+        for (i in 1..desired.second)
+            outputStream.write(desiredNum)
+        outputStream.close()
+    }
 }
 
 /**
